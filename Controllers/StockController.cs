@@ -1,5 +1,4 @@
 ﻿using los_api.Models;
-using los_api.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -10,25 +9,33 @@ using System.Threading.Tasks;
 
 namespace los_api.Controllers
 {
+    [Route("api/[controller]")]
     [ApiController]
     public class StockController : ControllerBase
     {
-        private readonly StockService stockService;
+        private readonly IosDbContext _context;
 
-        public StockController()
+        public StockController(IosDbContext context)
         {
-            stockService = new StockService();
+            _context = context;
         }
 
         [HttpGet]
-        [Route("api/[controller]/{id}")]
-        public ActionResult<Stock> GetById(string id)
+        public IActionResult GetStocks()
         {
-            var result = stockService.GetById(id);
+            var result = _context.Stocks.ToList();
+
+            return Ok(result);
+        }
+
+        [HttpGet("{productId}")]
+        public IActionResult GetStockByProductId(string productId)
+        {
+            var result = _context.Stocks.SingleOrDefault(s => s.ProductId == productId);
 
             if (result == null)
             {
-                return NotFound();
+                return NotFound("Data does not exist");
             }
             return Ok(result);
         }

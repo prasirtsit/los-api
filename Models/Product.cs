@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace los_api.Models
 {
-    public class Product
+    public partial class Product
     {
-        public string id { get; set; }
-        public string name { get; set; }
-        public byte[] imageUrl { get; set; }
-        public float price { get; set; }
+        public virtual string Id { get; set; }
+        public virtual string Name { get; set; }
+        public virtual byte[] ImageUrl { get; set; }
+        public virtual float Price { get; set; }
     }
 }

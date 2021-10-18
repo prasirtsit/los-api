@@ -1,6 +1,9 @@
+using los_api.Mocks;
+using los_api.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -24,6 +27,8 @@ namespace los_api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<IosDbContext>(options =>
+                options.UseInMemoryDatabase(Configuration.GetConnectionString(name: "MockDbConnection")));
 
             services.AddControllers();
         }
@@ -44,6 +49,14 @@ namespace los_api
             {
                 endpoints.MapControllers();
             });
+
+            SeedData(app.ApplicationServices.CreateScope().ServiceProvider.GetService<IosDbContext>());
+        }
+
+        public static void SeedData(IosDbContext context)
+        {
+            ProductMock.Create(context);
+            StockMock.Create(context);
         }
     }
 }
