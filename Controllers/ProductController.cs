@@ -1,6 +1,7 @@
 ﻿using los_api.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,9 +21,9 @@ namespace los_api.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetProduct()
+        public async Task<IActionResult> GetProduct()
         {
-            var result = _context.Products.ToList();
+            var result = await _context.Products.ToListAsync();
 
             return Ok(result);
         }

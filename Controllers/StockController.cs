@@ -1,5 +1,6 @@
 ﻿using los_api.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,21 +22,21 @@ namespace los_api.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetStocks()
+        public async Task<IActionResult> GetStocks()
         {
-            var result = _context.Stocks.ToList();
+            var result = await _context.Stocks.ToListAsync();
 
             return Ok(result);
         }
 
         [HttpGet("{productId}")]
-        public IActionResult GetStockByProductId(string productId)
+        public async Task<IActionResult> GetStockByProductId(string productId)
         {
-            var result = _context.Stocks.SingleOrDefault(s => s.ProductId == productId);
+            var result = await _context.Stocks.SingleOrDefaultAsync(s => s.ProductId == productId);
 
             if (result == null)
             {
-                return NotFound("Data does not exist");
+                return NotFound();
             }
             return Ok(result);
         }
